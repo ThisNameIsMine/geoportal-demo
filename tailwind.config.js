@@ -10,8 +10,15 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: "#2E3192",
+        secondary: "#6CC3E7",
+        tertiary: "#FFC843",
+        hover: "#EF3A4C",
       },
     },
   },
   plugins: [require("daisyui")],
+  daisyui: {
+    themes: false,
+  },
 };

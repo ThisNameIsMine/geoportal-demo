@@ -55,18 +55,24 @@ const kosiceNews = [
 
 const MoreOptions = () => {
   return (
-    <div>
-      {/* <h3 className="text-center text-3xl font-bold">
-        Č
-      </h3> */}
-      <div className="carousel rounded-box">
+    <div className="overflow-hidden">
+      <div className="py-4"></div>
+      <div className="carousel overflow-auto">
         {kosiceNews.map((item, index) => (
           <div
             key={index}
-            className="carousel-item border-r odd:bg-base-content h-64"
+            className="carousel-item border-r odd:bg-secondary even:text-primary odd:text-white bg-white h-64 flex flex-col gap-8 p-4"
           >
-            <h3>{item.title}</h3>
-            <p>{item.description}</p>
+            <h3 className="text-center text-3xl max-w-sm font-semibold">
+              {item.title}
+            </h3>
+            <p
+              className={`max-w-xs text-justify ${
+                index % 2 === 0 ? "text-gray-200" : ""
+              }`}
+            >
+              {item.description}
+            </p>
           </div>
         ))}
       </div>

@@ -3,7 +3,7 @@ import { AiOutlineStock } from "react-icons/ai";
 
 const Benefits = () => {
   return (
-    <div className="min-h-screen py-10 bg-gray-200">
+    <div className="py-10 pb-40 bg-white">
       <h2 className="text-[#191E23] text-5xl font-bold text-center pb-12">
         Čo ponúka Košický kraj?
       </h2>
@@ -48,14 +48,10 @@ export default Benefits;
 
 const Item = ({ title, text, icon }) => {
   return (
-    <div className="card bg-base-100 w-96 shadow-xl">
-      <figure className="px-10 pt-10">
-        <div className="text-[140px] text-primary">{icon}</div>
-      </figure>
-      <div className="card-body items-center text-center">
-        <h2 className="card-title text-3xl text-white">{title}</h2>
-        <p className="italic">{text}</p>
-      </div>
+    <div className="w-96 h-48 flex flex-col items-center">
+      <div className="text-[140px] text-primary">{icon}</div>
+      <h2 className="text-3xl text-black font-semibold">{title}</h2>
+      <p className="italic text-gray-400">{text}</p>
     </div>
   );
 };
