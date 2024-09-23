@@ -2,6 +2,8 @@ import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
+import L from "leaflet";
+import { smallIcon } from "@/utils/utility";
 
 // Reusable Map Component
 const Map = ({
@@ -11,6 +13,22 @@ const Map = ({
   borderStyle,
   getGeoJSONStyle,
 }) => {
+  const pointToLayer = (feature, latlng) => {
+    if (feature.properties.type === "bridges") {
+      return L.marker(latlng, { icon: smallIcon }); // Use the custom small icon for bridges
+    }
+    return L.marker(latlng, { icon: smallIcon }); // Use default marker for other point features
+  };
+  // Define the onEachFeature function to bind a popup to each feature
+  const onEachFeature = (feature, layer) => {
+    if (feature.properties) {
+      const popupContent = Object.keys(feature.properties)
+        .map((key) => `<strong>${key}</strong>: ${feature.properties[key]}`)
+        .join("<br>");
+
+      layer.bindPopup(popupContent); // Bind a popup to each feature
+    }
+  };
   return (
     <MapContainer
       className="rounded-3xl"
@@ -37,6 +55,8 @@ const Map = ({
               key={layerId}
               data={layers[layerId].data}
               style={getGeoJSONStyle(layerId)}
+              pointToLayer={pointToLayer}
+              onEachFeature={onEachFeature} // Bind popups to each feature
             />
           )
       )}

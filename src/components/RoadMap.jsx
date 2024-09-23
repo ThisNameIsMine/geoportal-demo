@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import proj4 from "proj4";
-import Legend from "./Legend";
 import Map from "./Map";
 import { transformGeoJSON, fetchWFSData } from "@/utils/utility";
 
@@ -16,27 +15,33 @@ proj4.defs(
 const layersConfig = [
   {
     id: "first_class_roads",
-    name: "First Class Roads (Highways)",
+    name: "Cesty 1. triedy",
     url: "https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:cesty_1_triedy_ksk&outputFormat=application/json",
     color: "red",
   },
   {
     id: "second_class_roads",
-    name: "Second Class Roads",
+    name: "Cesty 2. triedy",
     url: "https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:cesty_2_triedy_ksk&outputFormat=application/json",
     color: "blue",
   },
   {
     id: "third_class_roads",
-    name: "Third Class Roads",
+    name: "Cesty 3. triedy",
     url: "https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:cesty_3_triedy_ksk&outputFormat=application/json",
     color: "green",
   },
   {
     id: "railways",
-    name: "Railways",
+    name: "Železnice",
     url: "https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:zel_trate_ksk&outputFormat=application/json",
     color: "black",
+  },
+  {
+    id: "bridges",
+    name: "Mosty",
+    url: "https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ssc:bridges_dc&outputFormat=application/json",
+    color: "orange",
   },
 ];
 
@@ -46,6 +51,7 @@ export default function RoadMap() {
     second_class_roads: { visible: false, data: null },
     third_class_roads: { visible: false, data: null },
     railways: { visible: false, data: null },
+    bridges: { visible: false, data: null },
   });
   const [error, setError] = useState(null);
   const [borderData, setBorderData] = useState(null);
@@ -100,7 +106,7 @@ export default function RoadMap() {
 
   return (
     <div className="">
-      <h2>Select Layers</h2>
+      <h2 className="italic font-bold">Zvoľte si parametre</h2>
       <div className="flex flex-col p-3 m-auto">
         {layersConfig.map((layer) => (
           <label key={layer.id} className="flex items-center">
@@ -120,7 +126,7 @@ export default function RoadMap() {
                 marginRight: "8px",
               }}
             ></span>
-            {layer.name}
+            <p className="text-lg">{layer.name}</p>
           </label>
         ))}
       </div>
