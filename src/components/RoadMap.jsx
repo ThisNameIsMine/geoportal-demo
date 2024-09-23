@@ -10,39 +10,53 @@ import * as L from "leaflet";
 import "proj4leaflet";
 
 // Define the EPSG:5514 projection using proj4leaflet
-const EPSG5514 = new L.Proj.CRS(
+proj4.defs(
   "EPSG:5514",
-  "+proj=krovak +lat_0=49.5 +lon_0=24.83333333333333 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +datum=hermannskogel +units=m +no_defs",
-  {
-    resolutions: [
-      8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1,
-    ],
-    origin: [-951499.37, -1320357.42],
-    bounds: L.bounds([
-      [-1200000, -1200000],
-      [1200000, 1200000],
-    ]),
-  }
+  "+proj=krovak +lat_0=49.5 +lon_0=24.83333333333333 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +datum=hermannskogel +units=m +no_defs"
 );
-
-// Define the road layers (WFS URLs)
 const layersConfig = [
   {
     id: "first_class_roads",
     name: "First Class Roads (Highways)",
     url: "https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:cesty_1_triedy_ksk&outputFormat=application/json",
+    color: "red", // Color for first class roads
   },
   {
     id: "second_class_roads",
     name: "Second Class Roads",
     url: "https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:cesty_2_triedy_ksk&outputFormat=application/json",
+    color: "blue", // Color for second class roads
   },
   {
     id: "third_class_roads",
     name: "Third Class Roads",
     url: "https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:cesty_3_triedy_ksk&outputFormat=application/json",
+    color: "green", // Color for third class roads
   },
 ];
+
+// Component to display the legend
+const Legend = ({ layersConfig }) => {
+  return (
+    <div className="flex flex-col p-4">
+      <h2>Legend</h2>
+      {layersConfig.map((layer) => (
+        <div key={layer.id} style={{ display: "flex", alignItems: "center" }}>
+          <span
+            style={{
+              display: "inline-block",
+              width: "20px",
+              height: "10px",
+              backgroundColor: layer.color,
+              marginRight: "8px",
+            }}
+          ></span>
+          <span>{layer.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export default function RoadMap() {
   const [layers, setLayers] = useState({
@@ -119,9 +133,18 @@ export default function RoadMap() {
     });
   };
 
+  // Custom styling for each layer based on color
+  const getGeoJSONStyle = (layerId) => {
+    const layer = layersConfig.find((l) => l.id === layerId);
+    return {
+      color: layer.color,
+      weight: 2,
+    };
+  };
+
   return (
     <div className="flex">
-      {/* Checkbox controls for selecting layers */}
+      {/* Checkbox controls for selecting layers and legend */}
       <div className="flex flex-col p-4">
         <h2>Select Layers</h2>
         {layersConfig.map((layer) => (
@@ -134,6 +157,7 @@ export default function RoadMap() {
             {layer.name}
           </label>
         ))}
+        <Legend layersConfig={layersConfig} />
       </div>
 
       {/* MapContainer */}
@@ -155,7 +179,11 @@ export default function RoadMap() {
             (layerId) =>
               layers[layerId].visible &&
               layers[layerId].data && (
-                <GeoJSON key={layerId} data={layers[layerId].data} />
+                <GeoJSON
+                  key={layerId}
+                  data={layers[layerId].data}
+                  style={getGeoJSONStyle(layerId)}
+                />
               )
           )}
         </MapContainer>
