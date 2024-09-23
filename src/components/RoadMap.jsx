@@ -33,38 +33,23 @@ const layersConfig = [
     url: "https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:cesty_3_triedy_ksk&outputFormat=application/json",
     color: "green", // Color for third class roads
   },
+  {
+    id: "railways",
+    name: "Railways",
+    url: "https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:zel_trate_ksk&outputFormat=application/json",
+    color: "black", // Color for railways
+  },
 ];
-
-// Component to display the legend
-const Legend = ({ layersConfig }) => {
-  return (
-    <div className="flex flex-col p-4">
-      <h2>Legend</h2>
-      {layersConfig.map((layer) => (
-        <div key={layer.id} style={{ display: "flex", alignItems: "center" }}>
-          <span
-            style={{
-              display: "inline-block",
-              width: "20px",
-              height: "10px",
-              backgroundColor: layer.color,
-              marginRight: "8px",
-            }}
-          ></span>
-          <span>{layer.name}</span>
-        </div>
-      ))}
-    </div>
-  );
-};
 
 export default function RoadMap() {
   const [layers, setLayers] = useState({
     first_class_roads: { visible: false, data: null },
     second_class_roads: { visible: false, data: null },
     third_class_roads: { visible: false, data: null },
+    railways: { visible: false, data: null },
   });
   const [error, setError] = useState(null);
+  const [borderData, setBorderData] = useState(null);
 
   // Function to transform coordinates using EPSG:5514 to EPSG:4326
   const transformCoordinates = (coordinates) => {
@@ -90,6 +75,10 @@ export default function RoadMap() {
           feature.geometry.coordinates = coordinates.map(transformCoordinates);
         } else if (type === "MultiPoint") {
           feature.geometry.coordinates = coordinates.map(transformCoordinates);
+        } else if (type === "MultiPolygon") {
+          feature.geometry.coordinates = coordinates.map((polygon) =>
+            polygon.map((ring) => ring.map(transformCoordinates))
+          );
         }
 
         return feature;
@@ -115,6 +104,23 @@ export default function RoadMap() {
       setError(`Failed to load ${layerId}`);
     }
   };
+  useEffect(() => {
+    const borderUrl = `https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:hranica_ksk&outputFormat=application/json`; // Replace with actual WFS URL
+    const fetchBorderData = async () => {
+      try {
+        const response = await fetch(borderUrl);
+        if (!response.ok) throw new Error("Failed to fetch border data");
+        const data = await response.json();
+        const transformedData = transformGeoJSON(data);
+        setBorderData(transformedData); // Store border data
+      } catch (error) {
+        console.error("Error fetching border data:", error);
+        setError("Failed to load border");
+      }
+    };
+
+    fetchBorderData(); // Fetch border data when component mounts
+  }, []);
 
   // Toggle visibility and fetch data if necessary
   const handleLayerToggle = async (layerId) => {
@@ -138,34 +144,52 @@ export default function RoadMap() {
     const layer = layersConfig.find((l) => l.id === layerId);
     return {
       color: layer.color,
-      weight: 2,
+      weight: layerId === "border" ? 3 : 2, // Thicker border line
     };
+  };
+  const borderStyle = {
+    color: "purple", // Border color
+    weight: 3, // Thickness
+    fillOpacity: 0, // No fill inside the border
   };
 
   return (
-    <div className="flex">
+    <div className="">
       {/* Checkbox controls for selecting layers and legend */}
-      <div className="flex flex-col p-4">
-        <h2>Select Layers</h2>
+      <h2>Select Layers</h2>
+      <div className="flex flex-col p-3 m-auto">
         {layersConfig.map((layer) => (
-          <label key={layer.id}>
+          <label key={layer.id} className="flex items-center">
             <input
+              className=""
               type="checkbox"
+              style={{ width: "20px", height: "20px" }}
               checked={layers[layer.id].visible || false}
               onChange={() => handleLayerToggle(layer.id)}
             />
+            <span
+              className="p-3 ml-2"
+              style={{
+                display: "inline-block",
+                width: "20px",
+                height: "10px",
+                backgroundColor: layer.color,
+                marginRight: "8px",
+              }}
+            ></span>
+
             {layer.name}
           </label>
         ))}
-        <Legend layersConfig={layersConfig} />
       </div>
 
       {/* MapContainer */}
-      <div className="w-[700px] h-[500px]">
+      <div className="w-[780px] h-[450px]">
         <MapContainer
+          className="rounded-3xl shadow-lg border-2 border-gray-300"
           center={[48.716385, 21.261074]} // Example position (Slovakia)
-          zoom={8}
-          scrollWheelZoom={false}
+          zoom={9}
+          scrollWheelZoom={true}
           style={{ height: "100%", width: "100%" }}
         >
           {/* Base tile layer */}
@@ -173,6 +197,8 @@ export default function RoadMap() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+          {/* Render the border layer (always visible) */}
+          {borderData && <GeoJSON data={borderData} style={borderStyle} />}
 
           {/* Render visible layers dynamically based on user selection */}
           {Object.keys(layers).map(
