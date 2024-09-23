@@ -5,15 +5,14 @@ import Header from "../components/Header";
 
 export default function Home() {
   return (
-    <div>
+    <div className="bg-primary">
       <Header />
-
-      <div className="hero bg-base-200 min-h-screen">
+      <div className="hero bg-primary min-h-screen">
         <div className="hero-content text-center">
           <div className="max-w-sm md:max-w-xl">
             <h1 className="text-3xl md:text-6xl font-bold text-white ">
               Inovatívny portál KSK pre{" "}
-              <span className="text-primary">ľudí</span> a firmy
+              <span className="text-secondary">ľudí</span> a firmy
             </h1>
 
             <p className="py-6">
@@ -22,7 +21,7 @@ export default function Home() {
               vášho podnikania.
             </p>
             <a href="#moznosti">
-              <button className="btn btn-primary text-white">
+              <button className="btn bg-secondary text-white hover:bg-hover border-none">
                 Poďme na to!
               </button>
             </a>
@@ -30,8 +29,8 @@ export default function Home() {
         </div>
       </div>
       <Benefits />
-      <Options />
       <MoreOptions />
+      <Options />
     </div>
   );
 }

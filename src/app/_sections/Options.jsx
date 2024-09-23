@@ -2,7 +2,7 @@ import React from "react";
 
 const Options = () => {
   return (
-    <div className="min-h-screen bg-base-200" id="moznosti">
+    <div className="min-h-screen bg-primary" id="moznosti">
       <div className="container mx-auto py-10 min-">
         <h2 className="text-white text-5xl font-bold text-center pb-8 uppercase">
           Čo ťa zaujíma?
@@ -27,7 +27,7 @@ export default Options;
 
 const Circle = ({ children }) => {
   return (
-    <div className="w-48 h-48 rounded-full bg-primary flex items-center justify-center text-white font-bold text-2xl hover:scale-110 transition-transform">
+    <div className="w-48 h-48 rounded-full bg-secondary hover:bg-hover  flex items-center justify-center text-white font-bold text-2xl hover:scale-110 transition-transform">
       {children}
     </div>
   );
