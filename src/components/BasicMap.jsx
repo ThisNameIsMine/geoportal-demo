@@ -41,6 +41,10 @@ export default function BasicMap({
             feature.geometry.coordinates = coordinates.map((polygon) =>
               polygon.map((ring) => ring.map(transformCoordinates))
             );
+          } else if (type === "MultiLineString") {
+            feature.geometry.coordinates = coordinates.map((line) =>
+              line.map(transformCoordinates)
+            );
           }
           return feature;
         });
@@ -51,7 +55,7 @@ export default function BasicMap({
     const fetchWFSData = async () => {
       try {
         // WFS URL for GeoJSON output
-        const wfsUrl = `https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_statsoffice:celkovy_prirastok_obyv_obce&outputFormat=application/json`;
+        const wfsUrl = `https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:cesty_3_triedy_ksk&outputFormat=application/json`;
 
         // Fetch the data
         const response = await fetch(wfsUrl);
