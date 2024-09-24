@@ -97,7 +97,7 @@ const Page = () => {
           ))}
 
           <div
-            className={`w-1/2 min-h-1/2 bg-secondary rounded-lg flex flex-col p-8 absolute ${
+            className={`w-[80%] max-w-xl md:max-w-3xl min-h-1/2 bg-secondary rounded-lg flex flex-col p-8 absolute ${
               activeSlide < slides.length ? "hidden" : ""
             }`}
           >
@@ -131,8 +131,8 @@ const Page = () => {
           </div>
         </>
       ) : (
-        <div className="flex flex-col gap-10 items-center">
-          <p className="text-4xl text-center text-white">
+        <div className="flex flex-col gap-10 items-center px-10">
+          <p className="text-2xl md:text-4xl text-center text-white">
             Vaše odpovede sa spracovávajú
           </p>
           <span className="loading loading-dots loading-lg text-tertiary"></span>
@@ -147,7 +147,7 @@ export default Page;
 const Box = ({ slide, hidden, onNextClick }) => {
   return (
     <div
-      className={`w-1/2 min-h-1/2 bg-secondary rounded-lg flex flex-col p-8 absolute ${
+      className={`w-[80%] max-w-xl md:max-w-3xl min-h-1/2 bg-secondary rounded-lg flex flex-col p-8 absolute ${
         hidden ? "hidden" : ""
       }`}
     >

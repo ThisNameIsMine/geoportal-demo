@@ -52,7 +52,7 @@ const DetilPage = ({ params: { id } }) => {
 
   return (
     <div className="bg-primary">
-      <div className="container mx-auto py-20 grid grid-cols-2 gap-8 min-h-screen">
+      <div className="container mx-auto md:py-20 grid grid-cols-1 md:grid-cols-2 gap-8 min-h-screen">
         <div>
           <div className="carousel w-full">
             <div id="slide1" className="carousel-item relative w-full">
@@ -99,8 +99,8 @@ const DetilPage = ({ params: { id } }) => {
             </div>
           </div>
         </div>
-        <div className="text-white">
-          <h1 className="text-white font-bold text-5xl">
+        <div className="text-white px-4 pb-10">
+          <h1 className="text-white font-bold text-4xl md:text-5xl">
             {investmentOpportunity.title}
           </h1>
           <div className="divider"></div>
@@ -146,8 +146,8 @@ const DetilPage = ({ params: { id } }) => {
           </div>
         </div>
       </div>
-      <div className="h-screen flex" id="mapa">
-        <aside className="w-80 p-4 bg-gray-800 flex flex-col">
+      <div className="h-screen flex flex-col lg:flex-row" id="mapa">
+        <div className="w-full lg:w-80 p-4 bg-gray-800 lg:flex lg:flex-col">
           <h2 className="text-white text-4xl font-bold p-4 pt-10">
             Čo hľadáš?
           </h2>
@@ -211,13 +211,13 @@ const DetilPage = ({ params: { id } }) => {
             </div>
 
             <div className="flex justify-center mt-10">
-              <button className="text-2xl bg-tertiary py-3 w-full rounded-lg text-white bottom-0">
+              <button className="text-xl lg:text-2xl bg-tertiary py-2 md:py-3 w-full rounded-lg text-white bottom-0">
                 Mám záujem investovať
               </button>
             </div>
           </div>
-        </aside>
-        <div className="flex-1 bg-gray-100">
+        </div>
+        <div className="flex-1 bg-gray-100 h-[600px] md:h-[800px] lg:h-auto">
           {/* Render the RoadMap here */}
           <RoadMap
             layersVisibility={layersVisibility}

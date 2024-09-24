@@ -8,7 +8,7 @@ const Header = () => {
         href="/investovanie"
         className="bg-tertiary py-2 px-4 text-white font-bold rounded-md hover:scale-105 transition-transform"
       >
-        Chcem investovat
+        Chcem investovať
       </Link>
     </div>
   );

@@ -36,20 +36,15 @@ const infographicsData = {
     "Počet zamestnancov priemyselných subjektov: 52,9 tisíc",
     "Tržby za vlastné výkony: 12 miliárd eur",
   ],
-  Poľnohospodárstvo: [
-    "Poľnohospodárska pôda: 333 tisíc ha",
-  ],
-  Energetika: [
-  ],
+  Poľnohospodárstvo: ["Poľnohospodárska pôda: 333 tisíc ha"],
+  Energetika: [],
   Vzdelanie: [
     "Počet materských škol: 461",
     "Počet základných škol: 293",
     "Počet gymnázií: 34",
     "Počet stredných odborných škol: 59",
   ],
-  Bývanie: [
-    "Počet postavených bytov v roku 2023: 1 590",
-  ],
+  Bývanie: ["Počet postavených bytov v roku 2023: 1 590"],
   Príroda: [
     "Počet národných parkov: 2",
     "Počet chránených krajinných oblastí: 2",
@@ -92,31 +87,34 @@ export default function Home() {
       <Header />
       <div className="hero bg-primary min-h-screen">
         <div className="hero-content text-center">
-        {/* Scaling semi-transparent rectangle */}
-        <div className="mx-auto w-2/4">
-          <div className="bg-black bg-opacity-50 backdrop-blur-md rounded-lg p-6">
-            <h1 className="text-3xl md:text-5xl font-bold text-white ">
-              Inovatívny portál KSK pre{" "}
-              <span className="text-secondary">ľudí</span> a firmy
-            </h1>
+          {/* Scaling semi-transparent rectangle */}
+          <div className="mx-auto max-w-xl">
+            <div className="bg-black bg-opacity-50 backdrop-blur-md rounded-lg p-6">
+              <h1 className="text-3xl md:text-5xl font-bold text-white ">
+                Inovatívny portál KSK pre{" "}
+                <span className="text-secondary">ľudí</span> a firmy
+              </h1>
 
-            <p className="py-6 text-[#FFC843] text-xl">
-              Košický kraj ponúka strategickú polohu, kvalifikovanú pracovnú
-              silu a modernizovanú infraštruktúru, ideálne podmienky pre rast
-              vášho podnikania.
-            </p>
-            <a href="#moznosti">
-              <button className="btn bg-secondary text-white hover:bg-hover border-none">
-                Poďme na to!
-              </button>
-            </a>
-          </div>
+              <p className="py-6 text-[#FFC843] text-xl">
+                Košický kraj ponúka strategickú polohu, kvalifikovanú pracovnú
+                silu a modernizovanú infraštruktúru, ideálne podmienky pre rast
+                vášho podnikania.
+              </p>
+              <a href="#moznosti">
+                <button className="btn bg-secondary text-white hover:bg-hover border-none">
+                  Poďme na to!
+                </button>
+              </a>
+            </div>
           </div>
         </div>
       </div>
-      <Benefits selectedOption={selectedOption} infographicsData={infographicsData} />
-      <Options onOptionSelect={setSelectedOption} />
       <MoreOptions />
+      <Benefits
+        selectedOption={selectedOption}
+        infographicsData={infographicsData}
+      />
+      <Options onOptionSelect={setSelectedOption} />
     </div>
   );
 }

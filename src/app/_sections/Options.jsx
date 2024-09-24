@@ -1,28 +1,48 @@
 import React from "react";
-import { 
-  AiOutlineDollarCircle, 
-  AiOutlineCar, 
-  AiOutlineShopping, 
-  AiOutlineBuild, 
-  AiOutlineHeart, 
-  AiOutlineHome, 
-  AiOutlineEnvironment, 
-  AiOutlineThunderbolt, 
-  AiOutlineUser 
+import {
+  AiOutlineDollarCircle,
+  AiOutlineCar,
+  AiOutlineShopping,
+  AiOutlineBuild,
+  AiOutlineHeart,
+  AiOutlineHome,
+  AiOutlineEnvironment,
+  AiOutlineThunderbolt,
+  AiOutlineUser,
 } from "react-icons/ai";
 import { FaBook } from "react-icons/fa";
 
 const Options = ({ onOptionSelect }) => {
   const options = [
-    { color: "bg-green-500", icon: <AiOutlineDollarCircle />, label: "Ekonomika" },
+    {
+      color: "bg-green-500",
+      icon: <AiOutlineDollarCircle />,
+      label: "Ekonomika",
+    },
     { color: "bg-blue-500", icon: <AiOutlineCar />, label: "Doprava" },
-    { color: "bg-yellow-500", icon: <AiOutlineShopping />, label: "Cestovný ruch" },
+    {
+      color: "bg-yellow-500",
+      icon: <AiOutlineShopping />,
+      label: "Cestovný ruch",
+    },
     { color: "bg-red-500", icon: <AiOutlineBuild />, label: "Priemysel" },
-    { color: "bg-purple-500", icon: <AiOutlineHome />, label: "Poľnohospodárstvo" },
-    { color: "bg-orange-500", icon: <AiOutlineThunderbolt />, label: "Energetika" },
+    {
+      color: "bg-purple-500",
+      icon: <AiOutlineHome />,
+      label: "Poľnohospodárstvo",
+    },
+    {
+      color: "bg-orange-500",
+      icon: <AiOutlineThunderbolt />,
+      label: "Energetika",
+    },
     { color: "bg-teal-500", icon: <FaBook />, label: "Vzdelanie" },
     { color: "bg-pink-500", icon: <AiOutlineHome />, label: "Bývanie" },
-    { color: "bg-indigo-500", icon: <AiOutlineEnvironment />, label: "Príroda" },
+    {
+      color: "bg-indigo-500",
+      icon: <AiOutlineEnvironment />,
+      label: "Príroda",
+    },
     { color: "bg-gray-500", icon: <AiOutlineHeart />, label: "Zdravotníctvo" },
     { color: "bg-lime-500", icon: <AiOutlineUser />, label: "Demografia" },
   ];
@@ -30,7 +50,7 @@ const Options = ({ onOptionSelect }) => {
   return (
     <div className="bg-primary" id="moznosti">
       <div className="container mx-auto py-10">
-        <h2 className="text-[#FFC843] text-5xl font-bold text-center pb-12">
+        <h2 className="text-[#FFC843] text-4xl md:text-5xl font-bold text-center pb-12">
           Čo ťa zaujíma?
         </h2>
 
@@ -38,7 +58,12 @@ const Options = ({ onOptionSelect }) => {
           <div className="flex flex-col items-center">
             <div className="flex gap-5 flex-wrap justify-center">
               {options.map(({ color, icon, label }) => (
-                <Rectangle key={label} color={color} icon={icon} onClick={() => onOptionSelect(label)}>
+                <Rectangle
+                  key={label}
+                  color={color}
+                  icon={icon}
+                  onClick={() => onOptionSelect(label)}
+                >
                   {label}
                 </Rectangle>
               ))}

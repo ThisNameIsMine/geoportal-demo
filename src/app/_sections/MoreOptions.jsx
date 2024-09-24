@@ -50,7 +50,7 @@ const kosiceNews = [
 const MoreOptions = () => {
   return (
     <div className="overflow-hidden">
-      <h2 className="text-center text-white text-5xl font-bold pt-10">
+      <h2 className="text-center text-white text-4xl md:text-5xl font-bold pt-10">
         Novinky v <span className="text-secondary">KSK</span>
       </h2>
       <div className="py-4"></div>
