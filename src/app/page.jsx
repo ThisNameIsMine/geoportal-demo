@@ -92,8 +92,10 @@ export default function Home() {
       <Header />
       <div className="hero bg-primary min-h-screen">
         <div className="hero-content text-center">
-          <div className="max-w-sm md:max-w-xl">
-            <h1 className="text-3xl md:text-6xl font-bold text-white ">
+        {/* Scaling semi-transparent rectangle */}
+        <div className="mx-auto w-2/4">
+          <div className="bg-black bg-opacity-50 backdrop-blur-md rounded-lg p-6">
+            <h1 className="text-3xl md:text-5xl font-bold text-white ">
               Inovatívny portál KSK pre{" "}
               <span className="text-secondary">ľudí</span> a firmy
             </h1>
@@ -108,6 +110,7 @@ export default function Home() {
                 Poďme na to!
               </button>
             </a>
+          </div>
           </div>
         </div>
       </div>
