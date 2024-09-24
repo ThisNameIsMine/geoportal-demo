@@ -86,20 +86,27 @@ const Page = () => {
 
           <div className="divider"></div>
 
-          <p className="text-sm pb-1">Minimálna výška mostu (cm)</p>
-          <input
-            type="number"
-            min="0"
-            className="input input-bordered w-full"
-            value={bridgeHeightRequirement}
-            onChange={(e) => setBridgeHeightRequirement(Number(e.target.value))}
-          />
-          <button
-            className="btn btn-primary mt-4"
-            onClick={handleApplyHeightFilter} // Button to trigger double-toggle
-          >
-            Apply Height Filter
-          </button>
+          {/* Conditionally render input and button only if 'bridges' is checked */}
+          {layersVisibility.bridges && (
+            <>
+              <p className="text-sm pb-1">Minimálna výška mostu (cm)</p>
+              <input
+                type="number"
+                min="0"
+                className="input input-bordered w-full"
+                value={bridgeHeightRequirement}
+                onChange={(e) =>
+                  setBridgeHeightRequirement(Number(e.target.value))
+                }
+              />
+              <button
+                className="btn btn-primary mt-4"
+                onClick={handleApplyHeightFilter} // Button to trigger double-toggle
+              >
+                Apply Height Filter
+              </button>
+            </>
+          )}
         </div>
       </aside>
       <div className="flex-1 bg-gray-100">
