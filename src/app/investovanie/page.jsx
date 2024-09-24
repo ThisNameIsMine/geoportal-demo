@@ -6,37 +6,65 @@ import { useRouter } from "next/navigation";
 const slides = [
   {
     title: "Kto ste?",
-    questions: ["Firma", "Investor", "Startup", "Iny"],
+    questions: ["Firma", "Investor", "Startup", "Iný"],
     type: "radio",
   },
   {
-    title: "Prečo chcete investovať?",
+    title: "Ktorý sektor Vás zaujíma?",
     questions: [
-      "Kraj ma zaujal",
-      "Dostupné investičné prostriedky",
-      "Kvalifikovaná pracovná sila",
-      "Rastúci cestovný ruch",
+      "Transport",
+      "Zdravotníctvo",
+      "Bývanie",
+      "Vzdelanie",
+      "Energetika",
+      "Poľnohospodárstvo",
+      "Priemysel",
+      "Cestovný Ruch",
+      "Ekonomika",
     ],
     type: "checkbox",
   },
   {
     title: "Koľko mate finančných prostriedkov?",
-    questions: ["menej ako 10k", "10k - 100k", "100k - 1M", "1M a viac"],
+    questions: ["Menej ako 10 tisíc eur", "10 tisíc eur - 100 tisíc eur", "100 tisíc eur - 1 milion eur", "1 milion eur a viac"],
     type: "radio",
   },
   {
     title: "Aký je váš investičný horizont?",
     questions: ["1-3 roky", "3-5 rokov", "5-10 rokov", "10+ rokov"],
+    type: "radio",
+  },
+  {
+    title: "Vyberte etapu investície:?",
+    questions: [
+        "Skorý Startup",
+        "Seria A",
+        "Seria B a ďalej",
+        "Neskorá etapa spoločnosti",
+        "M&A",
+        "Nehnuteľnosti",
+        "Venture Capital",
+        "IPO",
+    ],
     type: "checkbox",
   },
   {
-    title: "Aké faktory vás môžu odradiť od investície do tohto projektu?",
+    title: "Vyberte risk:?",
     questions: [
-      "Nedostatočné údaje a transparentnosť",
-      "Vysoké riziko a neistota",
-      "Nedostatok lokálnej podpory a spolupráce",
+      "Nízky",
+      "Stredný",
+      "Vysoký",
     ],
-    type: "checkbox",
+    type: "radio",
+  },
+  {
+    title: "Vyberte typ účasti:?",
+    questions: [
+      "Hands-off",
+      "Poradenská",
+      "Aktívna účasť",
+    ],
+    type: "radio",
   },
 ];
 
