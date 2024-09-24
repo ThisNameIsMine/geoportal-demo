@@ -12,7 +12,21 @@ import {
 } from "react-icons/ai";
 import { FaBook } from "react-icons/fa";
 
-const Options = () => {
+const Options = ({ onOptionSelect }) => {
+  const options = [
+    { color: "bg-green-500", icon: <AiOutlineDollarCircle />, label: "Ekonomika" },
+    { color: "bg-blue-500", icon: <AiOutlineCar />, label: "Doprava" },
+    { color: "bg-yellow-500", icon: <AiOutlineShopping />, label: "Cestovný ruch" },
+    { color: "bg-red-500", icon: <AiOutlineBuild />, label: "Priemysel" },
+    { color: "bg-purple-500", icon: <AiOutlineHome />, label: "Poľnohospodárstvo" },
+    { color: "bg-orange-500", icon: <AiOutlineThunderbolt />, label: "Energetika" },
+    { color: "bg-teal-500", icon: <FaBook />, label: "Vzdelanie" },
+    { color: "bg-pink-500", icon: <AiOutlineHome />, label: "Bývanie" },
+    { color: "bg-indigo-500", icon: <AiOutlineEnvironment />, label: "Príroda" },
+    { color: "bg-gray-500", icon: <AiOutlineHeart />, label: "Zdravotníctvo" },
+    { color: "bg-lime-500", icon: <AiOutlineUser />, label: "Demografia" },
+  ];
+
   return (
     <div className="bg-primary" id="moznosti">
       <div className="container mx-auto py-10">
@@ -23,18 +37,11 @@ const Options = () => {
         <div className="flex justify-center items-center">
           <div className="flex flex-col items-center">
             <div className="flex gap-5 flex-wrap justify-center">
-              <Rectangle color="bg-green-500" icon={<AiOutlineDollarCircle />}>Ekonomika</Rectangle>
-              <Rectangle color="bg-blue-500" icon={<AiOutlineCar />}>Doprava</Rectangle>
-              <Rectangle color="bg-yellow-500" icon={<AiOutlineShopping />}>Cestovný ruch</Rectangle>
-              <Rectangle color="bg-red-500" icon={<AiOutlineBuild />}>Priemysel</Rectangle>
-              {/* Replaced AiOutlineField with AiOutlineHome */}
-              <Rectangle color="bg-purple-500" icon={<AiOutlineHome />}>Poľnohospodárstvo</Rectangle>
-              <Rectangle color="bg-orange-500" icon={<AiOutlineThunderbolt />}>Energetika</Rectangle>
-              <Rectangle color="bg-teal-500" icon={<FaBook />}>Vzdelanie</Rectangle>
-              <Rectangle color="bg-pink-500" icon={<AiOutlineHome />}>Bývanie</Rectangle>
-              <Rectangle color="bg-indigo-500" icon={<AiOutlineEnvironment />}>Príroda</Rectangle>
-              <Rectangle color="bg-gray-500" icon={<AiOutlineHeart />}>Zdravotníctvo</Rectangle>
-              <Rectangle color="bg-lime-500" icon={<AiOutlineUser />}>Demografia</Rectangle>
+              {options.map(({ color, icon, label }) => (
+                <Rectangle key={label} color={color} icon={icon} onClick={() => onOptionSelect(label)}>
+                  {label}
+                </Rectangle>
+              ))}
             </div>
           </div>
         </div>
@@ -43,17 +50,16 @@ const Options = () => {
   );
 };
 
-export default Options;
-
-const Rectangle = ({ children, color, icon }) => {
+const Rectangle = ({ children, color, icon, onClick }) => {
   return (
     <div
-      className={`px-6 py-4 rounded-lg ${color} hover:bg-hover flex items-center justify-start text-white font-bold text-xl transition-transform`}
+      onClick={onClick}
+      className={`px-6 py-4 rounded-lg ${color} hover:bg-hover flex items-center justify-start text-white font-bold text-xl transition-transform cursor-pointer`}
     >
-      {/* Display icon */}
       <span className="mr-3">{icon}</span>
-      {/* Display text */}
       <span>{children}</span>
     </div>
   );
 };
+
+export default Options;

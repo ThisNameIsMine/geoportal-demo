@@ -1,7 +1,6 @@
 import React from "react";
-import { AiOutlineStock } from "react-icons/ai";
 
-const Benefits = () => {
+const Benefits = ({ selectedOption, infographicsData }) => {
   return (
     <div className="relative">
       {/* Background Image Wrapper */}
@@ -12,8 +11,8 @@ const Benefits = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          filter: "blur(5px)", // Apply blur to only the background
-          zIndex: 0, // Ensure the background is behind everything
+          filter: "blur(5px)",
+          zIndex: 0,
         }}
       ></div>
 
@@ -27,32 +26,21 @@ const Benefits = () => {
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 justify-items-center">
-          <Item
-            title="HDP kraja ročne - 13 289 miliónov eur"
-          />
-          <Item
-            title="Priemerne vyprodukované HDP na občana - 16 876 Eur"
-          />
-          <Item
-            title="Podieľ ekonomicky aktívneho obyvateľstva - 49%"
-          />
-          <Item
-            title="Miera ekonomickej aktivity - 59,7%"
-          />
-          <Item title="Miera zamestnanosti - 71,7%"/>
-          <Item title="Miera nezamestnanosti - 9,3%"/>
+          {infographicsData[selectedOption]?.map((benefit, index) => (
+            <Item key={index} title={benefit} />
+          ))}
         </div>
       </div>
     </div>
   );
 };
 
-export default Benefits;
-
-const Item = ({ title, text, icon }) => {
+const Item = ({ title }) => {
   return (
     <div className="w-full h-15 flex flex-col items-center border border-gray-300 rounded-lg p-4 bg-transparent backdrop-blur-md">
       <h2 className="text-[#6CC3E7] text-xl text-white font-semibold">{title}</h2>
     </div>
   );
 };
+
+export default Benefits;
