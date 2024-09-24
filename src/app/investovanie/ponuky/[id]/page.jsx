@@ -51,8 +51,8 @@ const DetilPage = ({ params: { id } }) => {
   };
 
   return (
-    <div className="bg-primary min-h-screen">
-      <div className="container mx-auto py-20 grid grid-cols-2 gap-8">
+    <div className="bg-primary">
+      <div className="container mx-auto py-20 grid grid-cols-2 gap-8 min-h-screen">
         <div>
           <div className="carousel w-full">
             <div id="slide1" className="carousel-item relative w-full">
@@ -135,16 +135,25 @@ const DetilPage = ({ params: { id } }) => {
               podporí rast obchodu a zlepší prepojenie s ďalšími regiónmi.
             </li>
           </ul>
+
+          <div className="pt-10 flex justify-end">
+            <a
+              href="#mapa"
+              className="bg-tertiary py-1 px-6 rounded font-semibold text-lg"
+            >
+              Viac Informácií
+            </a>
+          </div>
         </div>
       </div>
-      <div className="h-screen flex">
-        <aside className="w-80 p-4 bg-gray-800">
+      <div className="h-screen flex" id="mapa">
+        <aside className="w-80 p-4 bg-gray-800 flex flex-col">
           <h2 className="text-white text-4xl font-bold p-4 pt-10">
             Čo hľadáš?
           </h2>
 
           <p className="italic">Zvoľte si parametre</p>
-          <div className="flex flex-col gap-2 flex-1">
+          <div className="flex flex-col gap-2 flex-1 ">
             <Checkbox
               label="Cesty 1. triedy"
               layerId="first_class_roads"
@@ -176,31 +185,33 @@ const DetilPage = ({ params: { id } }) => {
               onChange={handleLayerToggle}
             />
 
-            <div className="divider"></div>
+            <div className="flex-1 ">
+              {/* Conditionally render input and button only if 'bridges' is checked */}
+              {layersVisibility.bridges && (
+                <>
+                  <div className="divider"></div>
+                  <p className="text-sm pb-1">Minimálna výška mostu (cm)</p>
+                  <input
+                    type="number"
+                    min="0"
+                    className="input input-bordered w-full"
+                    value={bridgeHeightRequirement}
+                    onChange={(e) =>
+                      setBridgeHeightRequirement(Number(e.target.value))
+                    }
+                  />
+                  <button
+                    className="btn btn-primary mt-4"
+                    onClick={handleApplyHeightFilter} // Button to trigger double-toggle
+                  >
+                    Aplikovať filter
+                  </button>
+                </>
+              )}
+            </div>
 
-            {/* Conditionally render input and button only if 'bridges' is checked */}
-            {layersVisibility.bridges && (
-              <>
-                <p className="text-sm pb-1">Minimálna výška mostu (cm)</p>
-                <input
-                  type="number"
-                  min="0"
-                  className="input input-bordered w-full"
-                  value={bridgeHeightRequirement}
-                  onChange={(e) =>
-                    setBridgeHeightRequirement(Number(e.target.value))
-                  }
-                />
-                <button
-                  className="btn btn-primary mt-4"
-                  onClick={handleApplyHeightFilter} // Button to trigger double-toggle
-                >
-                  Apply Height Filter
-                </button>
-              </>
-            )}
             <div className="flex justify-center mt-10">
-              <button className="text-3xl bg-tertiary py-6 px-10 rounded-lg text-white bottom-0">
+              <button className="text-2xl bg-tertiary py-3 w-full rounded-lg text-white bottom-0">
                 Mám záujem investovať
               </button>
             </div>
