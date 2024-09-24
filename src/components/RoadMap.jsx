@@ -5,6 +5,7 @@ import proj4 from "proj4";
 import Map from "./Map";
 import { transformGeoJSON, fetchWFSData } from "@/utils/utility";
 import { greenIcon, redIcon } from "@/utils/utility";
+
 // Define EPSG:5514 projection
 proj4.defs(
   "EPSG:5514",
@@ -56,6 +57,7 @@ export default function RoadMap({ layersVisibility, bridgeHeightRequirement }) {
   const [error, setError] = useState(null);
   const [borderData, setBorderData] = useState(null);
 
+  // Fetch the border data
   useEffect(() => {
     const borderUrl = `https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:hranica_ksk&outputFormat=application/json`;
     const fetchBorderData = async () => {
@@ -93,7 +95,7 @@ export default function RoadMap({ layersVisibility, bridgeHeightRequirement }) {
       });
       return newLayers;
     });
-  }, [layersVisibility]); // Trigger when visibility changes
+  }, [layersVisibility]);
 
   const getGeoJSONStyle = (layerId) => {
     const layer = layersConfig.find((l) => l.id === layerId);
@@ -113,11 +115,11 @@ export default function RoadMap({ layersVisibility, bridgeHeightRequirement }) {
   const onEachFeature = (feature, layer) => {
     if (feature.properties && feature.properties.height) {
       const bridgeHeight = parseFloat(feature.properties.height); // Convert height to number
-      console.log("Bridge height:", bridgeHeight);
+
       if (!isNaN(bridgeHeight)) {
-        // Ensure height is a valid number
+        // Apply green or red icon based on whether the bridge meets the height requirement
         if (bridgeHeight >= bridgeHeightRequirement) {
-          layer.setIcon(greenIcon); // Bridge is high enough
+          layer.setIcon(greenIcon); // Bridge is passable (high enough)
         } else {
           layer.setIcon(redIcon); // Bridge is too low
         }
@@ -125,12 +127,34 @@ export default function RoadMap({ layersVisibility, bridgeHeightRequirement }) {
         console.log("Invalid height:", feature.properties.height);
       }
     }
-    // Popup for other features
+
+    // Popup for all features
     const popupContent = Object.keys(feature.properties || {})
       .map((key) => `<strong>${key}</strong>: ${feature.properties[key]}`)
       .join("<br>");
     layer.bindPopup(popupContent);
   };
+
+  // When the height requirement changes, force the map to update
+  useEffect(() => {
+    if (layers.bridges.visible && layers.bridges.data) {
+      layers.bridges.data.features.forEach((feature) => {
+        if (feature.properties && feature.properties.height) {
+          const bridgeHeight = parseFloat(feature.properties.height);
+
+          // Dynamically update the icon during re-render
+          const markerLayer = feature.layer; // Access the existing layer reference
+          if (markerLayer) {
+            if (bridgeHeight >= bridgeHeightRequirement) {
+              markerLayer.setIcon(greenIcon); // Green for passable bridges
+            } else {
+              markerLayer.setIcon(redIcon); // Red for too low bridges
+            }
+          }
+        }
+      });
+    }
+  }, [bridgeHeightRequirement, layers.bridges.visible]);
 
   return (
     <div className="w-full h-full">

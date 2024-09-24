@@ -26,7 +26,7 @@ export const greenIcon = new L.Icon({
 });
 export const redIcon = new L.Icon({
   iconUrl:
-    "https://png.pngtree.com/element_our/20200610/ourmid/pngtree-red-bridge-building-image_2244161.jpg", // Customize this with your green icon
+    "https://cdn-icons-png.flaticon.com/512/358/358536.png", // Customize this with your green icon
     iconSize: [12, 20], // Size of the icon
     iconAnchor: [6, 20], // Point of the icon which will correspond to marker's location
     popupAnchor: [0, -20], // Position of the popup anchor relative to the icon

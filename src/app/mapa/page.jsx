@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 const RoadMap = dynamic(() => import("@/components/RoadMap"), { ssr: false });
 const page = () => {
@@ -79,9 +79,9 @@ const page = () => {
                 min="0"
                 className="input input-bordered w-full"
                 value={bridgeHeightRequirement}
-                onChange={(e) =>
-                  setBridgeHeightRequirement(Number(e.target.value))
-                } // Update height requirement
+                onChange={(e) => {
+                  setBridgeHeightRequirement(Number(e.target.value));
+                }} // Update height requirement
               />
             </div>
           )}
