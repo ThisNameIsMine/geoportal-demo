@@ -4,7 +4,7 @@ import Options from "./_sections/Options";
 import Benefits from "./_sections/Benefits";
 import MoreOptions from "./_sections/MoreOptions";
 import Header from "../components/Header";
-import AIChatbot from '../components/AIChatbot';
+import AIChatbot from "@/components/AIChatbot";
 import { useState } from "react";
 
 const infographicsData = {
