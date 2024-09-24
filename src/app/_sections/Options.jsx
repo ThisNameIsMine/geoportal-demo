@@ -57,9 +57,8 @@ const Options = ({ onOptionSelect }) => {
         <div className="flex justify-center items-center">
           <div className="flex flex-col items-center">
             <div
-              className="grid grid-cols-1 gap-5 w-screen px-4 max-w-2xl
-              md:flex md:gap-5 md:flex-wrap md:justify-center
-            
+              className="grid grid-cols-1 gap-5 w-screen px-4 
+              md:flex md:gap-5 md:flex-wrap md:justify-center md:max-w-[1200px]
             "
             >
               {options.map(({ color, icon, label }) => (

@@ -5,6 +5,7 @@ import { investmentOpportunities } from "../items";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 const RoadMap = dynamic(() => import("@/components/RoadMap"), { ssr: false });
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const DetilPage = ({ params: { id } }) => {
   const investmentOpportunity = investmentOpportunities[id];
@@ -18,6 +19,7 @@ const DetilPage = ({ params: { id } }) => {
 
   const [bridgeHeightRequirement, setBridgeHeightRequirement] = useState(0); // Default minimal height
   const [applyHeightFilter, setApplyHeightFilter] = useState(false); // To trigger height filter application
+  const [submitting, setSubmitting] = useState(false);
 
   // Toggle the visibility of the layer
   const handleLayerToggle = (layerId) => {
@@ -48,6 +50,20 @@ const DetilPage = ({ params: { id } }) => {
   const handleApplyHeightFilter = () => {
     handleLayerToggleWithDelay("bridges"); // Toggle bridges layer off and on
     setApplyHeightFilter((prev) => !prev); // Optionally use this flag for other triggers
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission
+    setSubmitting(true);
+
+    console.log("submitting");
+
+    setTimeout(() => {
+      console.log("-- time");
+
+      setSubmitting(false);
+      document.getElementById("my_modal_3").close();
+    }, 1500);
   };
 
   return (
@@ -211,9 +227,54 @@ const DetilPage = ({ params: { id } }) => {
             </div>
 
             <div className="flex justify-center mt-10">
-              <button className="text-xl lg:text-2xl bg-tertiary py-2 md:py-3 w-full rounded-lg text-white bottom-0">
+              <button
+                className="text-xl lg:text-2xl bg-tertiary py-2 md:py-3 w-full rounded-lg text-white bottom-0"
+                onClick={() =>
+                  document.getElementById("my_modal_3").showModal()
+                }
+              >
                 Mám záujem investovať
               </button>
+              <dialog id="my_modal_3" className="modal">
+                <div className="modal-box">
+                  <div method="dialog">
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                      ✕
+                    </button>
+                  </div>
+                  <h2 className="text-white text-xl">Kontaktný formulár</h2>
+                  <form
+                    className="flex flex-col gap-2 items-center mt-8"
+                    onSubmit={handleSubmit}
+                  >
+                    <input
+                      type="text"
+                      placeholder="Meno / Názov spoločnosti"
+                      className="input input-bordered w-full max-w-xs"
+                      required
+                    />
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      className="input input-bordered w-full max-w-xs"
+                      required
+                    />
+
+                    <div className="flex justify-center md:justify-end mt-8">
+                      {!submitting ? (
+                        <button
+                          className="bg-secondary text-white py-2 px-4 rounded"
+                          type="submit"
+                        >
+                          Odoslať
+                        </button>
+                      ) : (
+                        <AiOutlineLoading3Quarters className="text-2xl animate-spin" />
+                      )}
+                    </div>
+                  </form>
+                </div>
+              </dialog>
             </div>
           </div>
         </div>

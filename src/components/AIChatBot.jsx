@@ -1,6 +1,7 @@
 "use client"; // Ensure this component runs on the client side
 
 import React, { useState } from "react";
+import { MdOutlineSupportAgent } from "react-icons/md";
 
 const AIChatbot = () => {
   const [userInput, setUserInput] = useState("");
@@ -55,7 +56,14 @@ const AIChatbot = () => {
           className="bg-blue-500 text-white p-3 rounded-full shadow-md"
           onClick={() => setIsChatOpen(!isChatOpen)}
         >
-          {isChatOpen ? "Zavrieť chat" : "Napísať AI help botovi"}
+          {isChatOpen ? (
+            "Zavrieť chat"
+          ) : (
+            <div className="flex items-center gap-2">
+              <MdOutlineSupportAgent />
+              Napísať AI help botovi
+            </div>
+          )}
         </button>
       </div>
 
@@ -63,7 +71,7 @@ const AIChatbot = () => {
       {isChatOpen && (
         <div className="fixed bottom-20 right-5 w-80 shadow-lg rounded-lg p-4 z-50 bg-gray-400">
           <div className="chatbox max-h-60 overflow-y-auto text-[#2E3192]">
-            {chatHistory.map((entry, index) => ( 
+            {chatHistory.map((entry, index) => (
               <div key={index} className={`message ${entry.sender}`}>
                 <strong>{entry.sender === "user" ? "You: " : "AI: "}</strong>
                 {entry.message}
@@ -78,7 +86,7 @@ const AIChatbot = () => {
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
               placeholder="Opýtaj sa ma čokoľvek..."
-              className="w-full p-2 border rounded-md bg-gray-700"
+              className="btn w-full p-2 border rounded-md bg-gray-700"
               disabled={isLoading}
             />
             <button
