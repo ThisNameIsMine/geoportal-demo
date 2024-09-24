@@ -6,6 +6,17 @@ import Header from "../components/Header";
 export default function Home() {
   return (
     <div className="bg-primary">
+      
+      <div
+        className="absolute inset-0 z-0"  // Ensure the background has a lower z-index
+        style={{
+          backgroundImage: "url('/images/background1.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          filter: "blur(3px)", // Apply blur to the background
+        }}
+      ></div>
       <Header />
       <div className="hero bg-primary min-h-screen">
         <div className="hero-content text-center">
@@ -15,7 +26,7 @@ export default function Home() {
               <span className="text-secondary">ľudí</span> a firmy
             </h1>
 
-            <p className="py-6">
+            <p className="py-6 text-[#FFC843] text-xl">
               Košický kraj ponúka strategickú polohu, kvalifikovanú pracovnú
               silu a modernizovanú infraštruktúru, ideálne podmienky pre rast
               vášho podnikania.
@@ -29,8 +40,8 @@ export default function Home() {
         </div>
       </div>
       <Benefits />
-      <MoreOptions />
       <Options />
+      <MoreOptions />
     </div>
   );
 }
