@@ -14,7 +14,7 @@ export default function Home() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          filter: "blur(3px)", // Apply blur to the background
+          filter: "blur(0px)", // Apply blur to the background
         }}
       ></div>
       <Header />
