@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import proj4 from "proj4";
 import Map from "./Map";
 import { transformGeoJSON, fetchWFSData } from "@/utils/utility";
-
+import { greenIcon, redIcon } from "@/utils/utility";
 // Define EPSG:5514 projection
 proj4.defs(
   "EPSG:5514",
@@ -45,7 +45,7 @@ const layersConfig = [
   },
 ];
 
-export default function RoadMap() {
+export default function RoadMap({ layersVisibility, bridgeHeightRequirement }) {
   const [layers, setLayers] = useState({
     first_class_roads: { visible: false, data: null },
     second_class_roads: { visible: false, data: null },
@@ -74,22 +74,27 @@ export default function RoadMap() {
     fetchBorderData();
   }, []);
 
-  // Toggle visibility and fetch data if necessary
-  const handleLayerToggle = async (layerId) => {
+  // Sync visibility state with the layers
+  useEffect(() => {
     setLayers((prevLayers) => {
-      const isVisible = prevLayers[layerId].visible;
-      if (!isVisible && !prevLayers[layerId].data) {
-        const layer = layersConfig.find((l) => l.id === layerId);
-        fetchWFSData(layerId, layer.url, transformGeoJSON, setLayers, setError);
-      }
-      return {
-        ...prevLayers,
-        [layerId]: { ...prevLayers[layerId], visible: !isVisible },
-      };
+      const newLayers = { ...prevLayers };
+      Object.keys(layersVisibility).forEach((layerId) => {
+        newLayers[layerId].visible = layersVisibility[layerId]; // Update visibility based on props
+        if (newLayers[layerId].visible && !newLayers[layerId].data) {
+          const layer = layersConfig.find((l) => l.id === layerId);
+          fetchWFSData(
+            layerId,
+            layer.url,
+            transformGeoJSON,
+            setLayers,
+            setError
+          );
+        }
+      });
+      return newLayers;
     });
-  };
+  }, [layersVisibility]); // Trigger when visibility changes
 
-  // Custom styling for each layer based on color
   const getGeoJSONStyle = (layerId) => {
     const layer = layersConfig.find((l) => l.id === layerId);
     return {
@@ -104,42 +109,39 @@ export default function RoadMap() {
     fillOpacity: 0,
   };
 
-  return (
-    <div className="">
-      <h2 className="italic font-bold">Zvoľte si parametre</h2>
-      <div className="flex flex-col p-3 m-auto">
-        {layersConfig.map((layer) => (
-          <label key={layer.id} className="flex items-center">
-            <input
-              type="checkbox"
-              style={{ width: "20px", height: "20px" }}
-              checked={layers[layer.id].visible || false}
-              onChange={() => handleLayerToggle(layer.id)}
-            />
-            <span
-              className="p-3 ml-2"
-              style={{
-                display: "inline-block",
-                width: "20px",
-                height: "10px",
-                backgroundColor: layer.color,
-                marginRight: "8px",
-              }}
-            ></span>
-            <p className="text-lg">{layer.name}</p>
-          </label>
-        ))}
-      </div>
+  // Modify the style of bridges based on the height requirement
+  const onEachFeature = (feature, layer) => {
+    if (feature.properties && feature.properties.height) {
+      const bridgeHeight = parseFloat(feature.properties.height); // Convert height to number
+      console.log("Bridge height:", bridgeHeight);
+      if (!isNaN(bridgeHeight)) {
+        // Ensure height is a valid number
+        if (bridgeHeight >= bridgeHeightRequirement) {
+          layer.setIcon(greenIcon); // Bridge is high enough
+        } else {
+          layer.setIcon(redIcon); // Bridge is too low
+        }
+      } else {
+        console.log("Invalid height:", feature.properties.height);
+      }
+    }
+    // Popup for other features
+    const popupContent = Object.keys(feature.properties || {})
+      .map((key) => `<strong>${key}</strong>: ${feature.properties[key]}`)
+      .join("<br>");
+    layer.bindPopup(popupContent);
+  };
 
-      <div className="w-[780px] h-[450px]">
-        <Map
-          layers={layers}
-          layersConfig={layersConfig}
-          borderData={borderData}
-          borderStyle={borderStyle}
-          getGeoJSONStyle={getGeoJSONStyle}
-        />
-      </div>
+  return (
+    <div className="w-full h-full">
+      <Map
+        layers={layers}
+        layersConfig={layersConfig}
+        borderData={borderData}
+        borderStyle={borderStyle}
+        getGeoJSONStyle={getGeoJSONStyle}
+        onEachFeature={onEachFeature} // Apply feature-level styles and popups
+      />
     </div>
   );
 }

@@ -12,6 +12,7 @@ const Map = ({
   borderData,
   borderStyle,
   getGeoJSONStyle,
+  onEachFeature,
 }) => {
   const pointToLayer = (feature, latlng) => {
     if (feature.properties.type === "bridges") {
@@ -20,7 +21,7 @@ const Map = ({
     return L.marker(latlng, { icon: smallIcon }); // Use default marker for other point features
   };
   // Define the onEachFeature function to bind a popup to each feature
-  const onEachFeature = (feature, layer) => {
+  const onEachFeature2 = (feature, layer) => {
     if (feature.properties) {
       const popupContent = Object.keys(feature.properties)
         .map((key) => `<strong>${key}</strong>: ${feature.properties[key]}`)
