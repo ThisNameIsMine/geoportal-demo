@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": "src",  // Pointing base to the 'src' directory
+    "paths": {
+      "@/*": ["*"]  // Alias '@/' to the 'src' directory
+    },
     "lib": [
       "dom",
       "dom.iterable",
