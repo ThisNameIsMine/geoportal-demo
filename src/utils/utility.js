@@ -17,6 +17,23 @@ export const smallIcon = new L.Icon({
   popupAnchor: [0, -20], // Position of the popup anchor relative to the icon
 });
 
+export const greenIcon = new L.Icon({
+  iconUrl:
+    "https://icons.veryicon.com/png/o/transport/traffic-2/super-large-bridge.png", // Customize this with your green icon
+    iconSize: [16, 23], // Size of the icon
+  iconAnchor: [6, 20], // Point of the icon which will correspond to marker's location
+  popupAnchor: [0, -20], // Position of the popup anchor relative to the icon
+});
+export const redIcon = new L.Icon({
+  iconUrl:
+    "https://cdn-icons-png.flaticon.com/512/358/358536.png", // Customize this with your green icon
+    iconSize: [12, 20], // Size of the icon
+    iconAnchor: [6, 20], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -20], // Position of the popup anchor relative to the icon
+});
+
+
+
 // GeoJSON transformation function
 export const transformGeoJSON = (geojson, skipTransformation = false) => {
   if (geojson && geojson.features) {

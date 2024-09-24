@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import proj4 from "proj4";
 import Map from "./Map";
 import { transformGeoJSON, fetchWFSData } from "@/utils/utility";
+import { greenIcon, redIcon } from "@/utils/utility";
 
 // Define EPSG:5514 projection
 proj4.defs(
@@ -45,7 +46,11 @@ const layersConfig = [
   },
 ];
 
-export default function RoadMap() {
+export default function RoadMap({
+  layersVisibility,
+  bridgeHeightRequirement,
+  applyHeightFilter, // The flag that triggers the filter
+}) {
   const [layers, setLayers] = useState({
     first_class_roads: { visible: false, data: null },
     second_class_roads: { visible: false, data: null },
@@ -56,6 +61,7 @@ export default function RoadMap() {
   const [error, setError] = useState(null);
   const [borderData, setBorderData] = useState(null);
 
+  // Fetch the border data
   useEffect(() => {
     const borderUrl = `https://www.geoportalksk.sk/geoserver/wfs?service=WFS&version=1.0.0&request=GetFeature&typeName=ksk_gis:hranica_ksk&outputFormat=application/json`;
     const fetchBorderData = async () => {
@@ -74,22 +80,27 @@ export default function RoadMap() {
     fetchBorderData();
   }, []);
 
-  // Toggle visibility and fetch data if necessary
-  const handleLayerToggle = async (layerId) => {
+  // Sync visibility state with the layers
+  useEffect(() => {
     setLayers((prevLayers) => {
-      const isVisible = prevLayers[layerId].visible;
-      if (!isVisible && !prevLayers[layerId].data) {
-        const layer = layersConfig.find((l) => l.id === layerId);
-        fetchWFSData(layerId, layer.url, transformGeoJSON, setLayers, setError);
-      }
-      return {
-        ...prevLayers,
-        [layerId]: { ...prevLayers[layerId], visible: !isVisible },
-      };
+      const newLayers = { ...prevLayers };
+      Object.keys(layersVisibility).forEach((layerId) => {
+        newLayers[layerId].visible = layersVisibility[layerId]; // Update visibility based on props
+        if (newLayers[layerId].visible && !newLayers[layerId].data) {
+          const layer = layersConfig.find((l) => l.id === layerId);
+          fetchWFSData(
+            layerId,
+            layer.url,
+            transformGeoJSON,
+            setLayers,
+            setError
+          );
+        }
+      });
+      return newLayers;
     });
-  };
+  }, [layersVisibility]);
 
-  // Custom styling for each layer based on color
   const getGeoJSONStyle = (layerId) => {
     const layer = layersConfig.find((l) => l.id === layerId);
     return {
@@ -104,42 +115,65 @@ export default function RoadMap() {
     fillOpacity: 0,
   };
 
-  return (
-    <div className="">
-      <h2 className="italic font-bold">Zvoľte si parametre</h2>
-      <div className="flex flex-col p-3 m-auto">
-        {layersConfig.map((layer) => (
-          <label key={layer.id} className="flex items-center">
-            <input
-              type="checkbox"
-              style={{ width: "20px", height: "20px" }}
-              checked={layers[layer.id].visible || false}
-              onChange={() => handleLayerToggle(layer.id)}
-            />
-            <span
-              className="p-3 ml-2"
-              style={{
-                display: "inline-block",
-                width: "20px",
-                height: "10px",
-                backgroundColor: layer.color,
-                marginRight: "8px",
-              }}
-            ></span>
-            <p className="text-lg">{layer.name}</p>
-          </label>
-        ))}
-      </div>
+  // Modify the style of bridges based on the height requirement
+  const onEachFeature = (feature, layer) => {
+    if (feature.properties && feature.properties.height) {
+      const bridgeHeight = parseFloat(feature.properties.height); // Convert height to number
 
-      <div className="w-[780px] h-[450px]">
-        <Map
-          layers={layers}
-          layersConfig={layersConfig}
-          borderData={borderData}
-          borderStyle={borderStyle}
-          getGeoJSONStyle={getGeoJSONStyle}
-        />
-      </div>
+      if (!isNaN(bridgeHeight)) {
+        // Apply green or red icon based on whether the bridge meets the height requirement
+        if (bridgeHeight >= bridgeHeightRequirement) {
+          layer.setIcon(greenIcon); // Bridge is passable (high enough)
+        } else {
+          layer.setIcon(redIcon); // Bridge is too low
+        }
+      } else {
+        console.log("Invalid height:", feature.properties.height);
+      }
+    }
+
+    // Popup for all features
+    const popupContent = Object.keys(feature.properties || {})
+      .map((key) => `<strong>${key}</strong>: ${feature.properties[key]}`)
+      .join("<br>");
+    layer.bindPopup(popupContent);
+  };
+
+  // Re-apply the height filter when the button is clicked
+  useEffect(() => {
+    console.log("Apply height filter:", applyHeightFilter);
+    if (applyHeightFilter && layers.bridges.visible) {
+      console.log("Filtering bridges by height:", bridgeHeightRequirement);
+      layers.bridges.data.features.forEach((feature) => {
+        if (feature.properties && feature.properties.height) {
+          console.log("Feature height:", feature.properties);
+          const bridgeHeight = parseFloat(feature.properties.height);
+          // Dynamically update the icon when the button is clicked
+          const markerLayer = feature.layer; // Access the existing layer reference
+          if (markerLayer) {
+            if (bridgeHeight >= bridgeHeightRequirement) {
+              console.log("Bridge is passable:", feature.properties.height);
+              markerLayer.setIcon(greenIcon); // Green for passable bridges
+            } else {
+              console.log("Bridge is too low:", feature.properties.height);
+              markerLayer.setIcon(redIcon); // Red for too low bridges
+            }
+          }
+        }
+      });
+    }
+  }, [applyHeightFilter]); // Only trigger when the button is clicked
+
+  return (
+    <div className="w-full h-full">
+      <Map
+        layers={layers}
+        layersConfig={layersConfig}
+        borderData={borderData}
+        borderStyle={borderStyle}
+        getGeoJSONStyle={getGeoJSONStyle}
+        onEachFeature={onEachFeature} // Apply feature-level styles and popups
+      />
     </div>
   );
 }
