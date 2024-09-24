@@ -26,7 +26,12 @@ const slides = [
   },
   {
     title: "Koľko mate finančných prostriedkov?",
-    questions: ["Menej ako 10 tisíc eur", "10 tisíc eur - 100 tisíc eur", "100 tisíc eur - 1 milion eur", "1 milion eur a viac"],
+    questions: [
+      "Menej ako 10 tisíc eur",
+      "10 tisíc eur - 100 tisíc eur",
+      "100 tisíc eur - 1 milion eur",
+      "1 milion eur a viac",
+    ],
     type: "radio",
   },
   {
@@ -37,33 +42,25 @@ const slides = [
   {
     title: "Vyberte etapu investície:?",
     questions: [
-        "Skorý Startup",
-        "Seria A",
-        "Seria B a ďalej",
-        "Neskorá etapa spoločnosti",
-        "M&A",
-        "Nehnuteľnosti",
-        "Venture Capital",
-        "IPO",
+      "Skorý Startup",
+      "Seria A",
+      "Seria B a ďalej",
+      "Neskorá etapa spoločnosti",
+      "M&A",
+      "Nehnuteľnosti",
+      "Venture Capital",
+      "IPO",
     ],
     type: "checkbox",
   },
   {
     title: "Vyberte risk:?",
-    questions: [
-      "Nízky",
-      "Stredný",
-      "Vysoký",
-    ],
+    questions: ["Nízky", "Stredný", "Vysoký"],
     type: "radio",
   },
   {
     title: "Vyberte typ účasti:?",
-    questions: [
-      "Hands-off",
-      "Poradenská",
-      "Aktívna účasť",
-    ],
+    questions: ["Hands-off", "Poradenská", "Aktívna účasť"],
     type: "radio",
   },
 ];
@@ -84,7 +81,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-primary">
+    <div className="flex justify-center items-center min-h-screen bg-primary py-20">
       {activeSlide <= slides.length ? (
         <>
           {slides.map((slide, index) => (
@@ -147,7 +144,7 @@ export default Page;
 const Box = ({ slide, hidden, onNextClick }) => {
   return (
     <div
-      className={`w-[80%] max-w-xl md:max-w-3xl min-h-1/2 bg-secondary rounded-lg flex flex-col p-8 absolute ${
+      className={`w-[80%] max-w-xl md:max-w-3xl min-h-1/2 bg-secondary rounded-lg flex flex-col p-4 md:p-8 ${
         hidden ? "hidden" : ""
       }`}
     >

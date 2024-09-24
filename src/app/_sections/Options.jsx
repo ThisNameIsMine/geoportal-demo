@@ -56,7 +56,12 @@ const Options = ({ onOptionSelect }) => {
 
         <div className="flex justify-center items-center">
           <div className="flex flex-col items-center">
-            <div className="flex gap-5 flex-wrap justify-center">
+            <div
+              className="grid grid-cols-1 gap-5 w-screen px-4 max-w-2xl
+              md:flex md:gap-5 md:flex-wrap md:justify-center
+            
+            "
+            >
               {options.map(({ color, icon, label }) => (
                 <Rectangle
                   key={label}
@@ -79,7 +84,7 @@ const Rectangle = ({ children, color, icon, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className={`px-6 py-4 rounded-lg ${color} hover:bg-hover flex items-center justify-start text-white font-bold text-xl transition-transform cursor-pointer`}
+      className={`px-6 py-4 rounded-lg ${color} hover:bg-hover flex items-center justify-start text-white font-bold text-lg md:text-xl transition-transform cursor-pointer`}
     >
       <span className="mr-3">{icon}</span>
       <span>{children}</span>
