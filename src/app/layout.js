@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "KSK Invest",
+  title: "KSK | Regionálny rozvojový portál",
   description: "Investícia do budúcnosti Košického kraja",
 };
 
