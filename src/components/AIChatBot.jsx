@@ -6,6 +6,7 @@ const AIChatbot = () => {
   const [userInput, setUserInput] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false); // State for toggling chat window
 
   const sendMessageToAPI = async (message) => {
     try {
@@ -47,29 +48,49 @@ const AIChatbot = () => {
   };
 
   return (
-    <div className="chatbot-container">
-      <div className="chatbox">
-        {chatHistory.map((entry, index) => (
-          <div key={index} className={`message ${entry.sender}`}>
-            <strong>{entry.sender === "user" ? "You: " : "AI: "}</strong>
-            {entry.message}
-          </div>
-        ))}
-        {isLoading && <div className="loading">AI is typing...</div>}
+    <div>
+      {/* Button to toggle chat window */}
+      <div className="fixed bottom-5 right-5 z-50">
+        <button
+          className="bg-blue-500 text-white p-3 rounded-full shadow-md"
+          onClick={() => setIsChatOpen(!isChatOpen)}
+        >
+          {isChatOpen ? "Zavrieť chat" : "Napísať AI help botovi"}
+        </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="input-area">
-        <input
-          type="text"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Ask me anything..."
-          disabled={isLoading}
-        />
-        <button type="submit" disabled={isLoading || !userInput.trim()}>
-          Send
-        </button>
-      </form>
+      {/* Chat window (conditionally rendered) */}
+      {isChatOpen && (
+        <div className="fixed bottom-20 right-5 w-80 shadow-lg rounded-lg p-4 z-50 bg-gray-400">
+          <div className="chatbox max-h-60 overflow-y-auto text-[#2E3192]">
+            {chatHistory.map((entry, index) => ( 
+              <div key={index} className={`message ${entry.sender}`}>
+                <strong>{entry.sender === "user" ? "You: " : "AI: "}</strong>
+                {entry.message}
+              </div>
+            ))}
+            {isLoading && <div className="loading">AI odpisuje..</div>}
+          </div>
+
+          <form onSubmit={handleSubmit} className="input-area mt-2">
+            <input
+              type="text"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              placeholder="Opýtaj sa ma čokoľvek..."
+              className="w-full p-2 border rounded-md bg-gray-700"
+              disabled={isLoading}
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 text-white p-2 mt-2 rounded-md w-full"
+              disabled={isLoading || !userInput.trim()}
+            >
+              Odoslať
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
