@@ -46,7 +46,11 @@ const layersConfig = [
   },
 ];
 
-export default function RoadMap({ layersVisibility, bridgeHeightRequirement }) {
+export default function RoadMap({
+  layersVisibility,
+  bridgeHeightRequirement,
+  applyHeightFilter, // The flag that triggers the filter
+}) {
   const [layers, setLayers] = useState({
     first_class_roads: { visible: false, data: null },
     second_class_roads: { visible: false, data: null },
@@ -135,26 +139,30 @@ export default function RoadMap({ layersVisibility, bridgeHeightRequirement }) {
     layer.bindPopup(popupContent);
   };
 
-  // When the height requirement changes, force the map to update
+  // Re-apply the height filter when the button is clicked
   useEffect(() => {
-    if (layers.bridges.visible && layers.bridges.data) {
+    console.log("Apply height filter:", applyHeightFilter);
+    if (applyHeightFilter && layers.bridges.visible) {
+      console.log("Filtering bridges by height:", bridgeHeightRequirement);
       layers.bridges.data.features.forEach((feature) => {
         if (feature.properties && feature.properties.height) {
+          console.log("Feature height:", feature.properties);
           const bridgeHeight = parseFloat(feature.properties.height);
-
-          // Dynamically update the icon during re-render
+          // Dynamically update the icon when the button is clicked
           const markerLayer = feature.layer; // Access the existing layer reference
           if (markerLayer) {
             if (bridgeHeight >= bridgeHeightRequirement) {
+              console.log("Bridge is passable:", feature.properties.height);
               markerLayer.setIcon(greenIcon); // Green for passable bridges
             } else {
+              console.log("Bridge is too low:", feature.properties.height);
               markerLayer.setIcon(redIcon); // Red for too low bridges
             }
           }
         }
       });
     }
-  }, [bridgeHeightRequirement, layers.bridges.visible]);
+  }, [applyHeightFilter]); // Only trigger when the button is clicked
 
   return (
     <div className="w-full h-full">

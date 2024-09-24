@@ -1,8 +1,9 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 const RoadMap = dynamic(() => import("@/components/RoadMap"), { ssr: false });
-const page = () => {
+
+const Page = () => {
   const [layersVisibility, setLayersVisibility] = useState({
     first_class_roads: false,
     second_class_roads: false,
@@ -12,12 +13,37 @@ const page = () => {
   });
 
   const [bridgeHeightRequirement, setBridgeHeightRequirement] = useState(0); // Default minimal height
+  const [applyHeightFilter, setApplyHeightFilter] = useState(false); // To trigger height filter application
 
+  // Toggle the visibility of the layer
   const handleLayerToggle = (layerId) => {
     setLayersVisibility((prev) => ({
       ...prev,
       [layerId]: !prev[layerId], // Toggle visibility
     }));
+  };
+
+  // This function toggles visibility off, waits for re-render, and toggles back on
+  const handleLayerToggleWithDelay = (layerId) => {
+    // First, toggle visibility off
+    setLayersVisibility((prev) => ({
+      ...prev,
+      [layerId]: false,
+    }));
+
+    // Wait 100ms to allow for re-render, then toggle it back on
+    setTimeout(() => {
+      setLayersVisibility((prev) => ({
+        ...prev,
+        [layerId]: true,
+      }));
+    }, 100); // You can adjust this delay if needed
+  };
+
+  // This function will trigger the double-toggle for the 'bridges' layer
+  const handleApplyHeightFilter = () => {
+    handleLayerToggleWithDelay("bridges"); // Toggle bridges layer off and on
+    setApplyHeightFilter((prev) => !prev); // Optionally use this flag for other triggers
   };
 
   return (
@@ -60,31 +86,20 @@ const page = () => {
 
           <div className="divider"></div>
 
-          <p className="text-sm pb-1">Vyber niecoho</p>
-          <select className="select select-bordered w-full max-w-xs">
-            <option disabled>Nadpis</option>
-            <option>Han Solo</option>
-            <option>Greedo</option>
-            <option>Pivo</option>
-            <option>Birel</option>
-            <option>Kofola</option>
-          </select>
-
-          {/* New Control Panel for Bridge Requirements */}
-          {layersVisibility.bridges && (
-            <div className="mt-4">
-              <p className="text-sm pb-1">Minimálna výška mostu (cm)</p>
-              <input
-                type="number"
-                min="0"
-                className="input input-bordered w-full"
-                value={bridgeHeightRequirement}
-                onChange={(e) => {
-                  setBridgeHeightRequirement(Number(e.target.value));
-                }} // Update height requirement
-              />
-            </div>
-          )}
+          <p className="text-sm pb-1">Minimálna výška mostu (cm)</p>
+          <input
+            type="number"
+            min="0"
+            className="input input-bordered w-full"
+            value={bridgeHeightRequirement}
+            onChange={(e) => setBridgeHeightRequirement(Number(e.target.value))}
+          />
+          <button
+            className="btn btn-primary mt-4"
+            onClick={handleApplyHeightFilter} // Button to trigger double-toggle
+          >
+            Apply Height Filter
+          </button>
         </div>
       </aside>
       <div className="flex-1 bg-gray-100">
@@ -92,13 +107,14 @@ const page = () => {
         <RoadMap
           layersVisibility={layersVisibility}
           bridgeHeightRequirement={bridgeHeightRequirement}
+          applyHeightFilter={applyHeightFilter} // Trigger re-render based on button click
         />
       </div>
     </div>
   );
 };
 
-export default page;
+export default Page;
 
 const Checkbox = ({ label, layerId, checked, onChange }) => {
   return (
